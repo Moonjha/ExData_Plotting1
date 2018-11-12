@@ -1,0 +1,16 @@
+install.packages("data.table")
+library("data.table")
+POWER_DATA <- fread("household_power_consumption.txt")
+POWER_SUBSET <- POWER_DATA[POWER_DATA$Date %in% c("1/2/2007","2/2/2007") ,]
+DT <- strptime(paste(POWER_SUBSET$Date, POWER_SUBSET$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+GLOBAL_ACTIVE_POWER <- as.numeric(POWER_SUBSET$Global_active_power)
+SUB_METERING_1 <- as.numeric(POWER_SUBSET$Sub_metering_1)
+SUB_METERING_2 <- as.numeric(POWER_SUBSET$Sub_metering_2)
+SUB_METERING_3 <- as.numeric(POWER_SUBSET$Sub_metering_3)
+png("plot3.png", width=480, height=480)
+plot(DT, SUB_METERING_1, type="l", ylab="Energy sub metering", xlab="")
+lines(DT, SUB_METERING_2, type="l", col="red")
+lines(DT, SUB_METERING_3, type="l", col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+       lty=1, lwd=2.5, col=c("black", "red", "blue"))
+dev.off()
